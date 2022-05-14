@@ -23,7 +23,6 @@ const Draggable: FC<Props> = (props) => {
 
   const onDragHandler = (event: MouseEvent) => {
     if (!isDragging) return;
-    console.log(event.clientX);
     const newX = event.clientX - delta.x;
     const newY = event.clientY - delta.y;
     setTranslate({ x: newX, y: newY });
@@ -32,10 +31,12 @@ const Draggable: FC<Props> = (props) => {
     }
   };
   const onDragStop = (event: React.MouseEvent) => {
+    if (!isDragging) return;
     console.log("stop");
     setIsDragging(false);
     movableArea.current?.removeEventListener("mousemove", onDragHandler);
     movableArea.current?.removeEventListener("mouseup", onDragStop);
+    movableArea.current?.removeEventListener("mouseleave", onDragStop);
   };
   const onDragStart = (event: React.MouseEvent) => {
     console.log("start");
@@ -54,7 +55,8 @@ const Draggable: FC<Props> = (props) => {
   return (
     <div
       style={{
-        transform: `translate(${translate.x}px, ${translate.y}px)`
+        transform: `translate(${translate.x}px, ${translate.y}px)`,
+        width: "fit-content"
       }}
       onMouseDown={onDragStart}
     >
