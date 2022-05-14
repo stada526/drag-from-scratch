@@ -13,12 +13,13 @@ export default function App() {
     x: 0,
     y: 0
   });
+  const [delta, setDelta] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const onDragHandler = (event: MouseEvent) => {
     if (!isDragging) return;
     console.log(event.clientX);
-    setTranslate({ x: event.clientX, y: event.clientY });
+    setTranslate({ x: event.clientX - delta.x, y: event.clientY - delta.y });
   };
   const onDragStop = (event: React.MouseEvent) => {
     console.log("stop");
@@ -29,6 +30,9 @@ export default function App() {
   const onDragStart = (event: React.MouseEvent) => {
     console.log("start");
     setIsDragging(true);
+    const deltaX = event.clientX - translate.x;
+    const deltaY = event.clientY - translate.y;
+    setDelta({ x: deltaX, y: deltaY });
   };
 
   useEffect(() => {
@@ -52,6 +56,7 @@ export default function App() {
           <div style={{ ...BoxStyle, backgroundColor: "red" }}></div>
         </div>
       </div>
+      {JSON.stringify(delta)}
     </div>
   );
 }
