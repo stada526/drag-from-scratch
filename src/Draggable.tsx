@@ -4,10 +4,11 @@ type Props = {
   movableArea: RefObject<HTMLDivElement>;
   children: ReactNode;
   initPosition?: { x: number; y: number };
+  updatePosition?: (x: number, y: number) => void;
 };
 
 const Draggable: FC<Props> = (props) => {
-  const { movableArea, children, initPosition } = props;
+  const { movableArea, children, initPosition, updatePosition } = props;
 
   const [translate, setTranslate] = useState(
     initPosition
@@ -23,7 +24,12 @@ const Draggable: FC<Props> = (props) => {
   const onDragHandler = (event: MouseEvent) => {
     if (!isDragging) return;
     console.log(event.clientX);
-    setTranslate({ x: event.clientX - delta.x, y: event.clientY - delta.y });
+    const newX = event.clientX - delta.x;
+    const newY = event.clientY - delta.y;
+    setTranslate({ x: newX, y: newY });
+    if (updatePosition) {
+      updatePosition(newX, newY);
+    }
   };
   const onDragStop = (event: React.MouseEvent) => {
     console.log("stop");
